@@ -1,4 +1,4 @@
-name: Tests
+name: Docker Tests
 
 on:
   push:
@@ -9,22 +9,15 @@ on:
       - main
 
 jobs:
-  test:
+  docker-tests:
     runs-on: ubuntu-latest
 
     steps:
       - name: Descargar codigo
         uses: actions/checkout@v4
 
-      - name: Instalar Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      - name: Construir imagen Docker
+        run: docker build -t computacion18-05-tests .
 
-      - name: Instalar dependencias
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Ejecutar tests
-        run: python -m pytest
+      - name: Ejecutar tests dentro del contenedor
+        run: docker run --rm computacion18-05-tests
